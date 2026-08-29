@@ -45,6 +45,14 @@ docker build -t ecom/payment-service . && docker run --rm -p 8085:8085 ecom/paym
 
 Quality config is vendored: `gradle/quality.gradle`, `config/checkstyle/`.
 
+## Testing
+
+`./gradlew test` runs every layer below; `./gradlew build` also runs Checkstyle + Spotless and writes a JaCoCo report.
+
+- **Smoke** — `PaymentServiceApplicationTests`: the full Spring context starts.
+- **Unit** — `service/PaymentServiceTest`: amounts at or below the ceiling are `APPROVED`, amounts above it are `DECLINED`.
+- **API / web slice** — `web/PaymentControllerTest` (`@WebMvcTest`): `POST /payments` returns the payment view; `GET /payments/{id}` missing → 404; a non-positive amount → 400.
+
 ## Config
 
 | Variable | Default | Purpose |
