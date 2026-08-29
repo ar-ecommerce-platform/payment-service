@@ -6,7 +6,7 @@ Payment authorization for the [ar-ecommerce-platform](https://github.com/ar-ecom
 > a configurable ceiling, giving the order flow a deterministic decline path to show.
 
 - **Port:** 8085
-- **Persistence:** in-memory H2 (`payments` table) — resets on restart
+- **Persistence:** `payments` table. Dev: in-memory H2 (resets on restart). `prod`: PostgreSQL + Flyway.
 - **Registers with:** Eureka (discovery-server :8761)
 
 ## Endpoints
@@ -60,10 +60,12 @@ Quality config is vendored: `gradle/quality.gradle`, `config/checkstyle/`.
 | `SERVER_PORT` | `8085` | HTTP port |
 | `PAYMENT_AUTO_DECLINE_ABOVE_CENTS` | `500000` | amounts strictly above this are declined |
 | `EUREKA_CLIENT_SERVICEURL_DEFAULTZONE` | `http://localhost:8761/eureka/` | registry URL |
+| `SPRING_PROFILES_ACTIVE` | _(none)_ | set to `prod` to use PostgreSQL + Flyway instead of H2 |
+| `SPRING_DATASOURCE_URL` / `_USERNAME` / `_PASSWORD` | - | Postgres connection (`prod` only) |
 
 ## Tech
 
-Java 21 · Spring Boot 3.5.7 · Spring Data JPA + H2 · Bean Validation ·
+Java 21 · Spring Boot 3.5.7 · Spring Data JPA (H2 / PostgreSQL + Flyway) · Bean Validation ·
 Spring Cloud 2025.0.0 (`netflix-eureka-client`) · Gradle
 
 See [infra/RUNBOOK.md](../infra/RUNBOOK.md) for the full platform runbook.
